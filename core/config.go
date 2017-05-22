@@ -1,9 +1,9 @@
 package core
 
 import (
-	"cfg"
+	"gee/cfg"
 	"encoding/json"
-	"lg"
+	"gee/lg"
 )
 
 var Log = lg.NewLogger("EL ")

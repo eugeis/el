@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"lg"
+	"gee/lg"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
