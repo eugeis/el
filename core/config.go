@@ -9,32 +9,50 @@ import (
 var Log = lg.NewLogger("EL ")
 
 type Config struct {
+	Name  string   `default:El`
+	Port  int   `default:5000`
 	Debug bool   `default:true`
 
-	File           string
-	ClusterName    string
-	Hosts          []string
-	Port           int
-	Settings       map[string]string
-	Fields         []string
-	Separator      string
-	Indexes        []string
-	SearchSource   string
+	Folder   string `default:export`
+	Elastics []*Elastic
 
 	ConfigFiles    []string
 	ConfigSuffixes []string
 }
 
-func NewElConfig() *Config {
+type Elastic struct {
+	Name      string
+	Cluster   string`default:`
+	Hosts     []string
+	Port      int`default:9300`
+	Settings  map[string]string
+	Fields    []string
+	Separator string`default:;`
+	Indexes   []string
+	Queries   []*Query
+}
+
+type Query struct {
+	Name   string
+	Source string
+}
+
+func NewElastic(name string) *Elastic {
+	return &Elastic{
+		Name:      name,
+		Hosts:     []string{"localhost"},
+		Settings:  make(map[string]string),
+		Fields:    []string{"@logdate", "thread", "level", "logger", "dur", "kind", "message"},
+		Separator: ";",
+		Indexes:   []string{"logstash*"},
+
+	}
+}
+
+func NewConfig(name string) *Config {
 	return &Config{
-		File:         "C:\\temp\\export.log",
-		ClusterName:  "", Hosts: []string{"localhost"},
-		Port:         9300,
-		Settings:     make(map[string]string),
-		Fields:       []string{"_all"},
-		Separator:    " ",
-		Indexes:      []string{"logstash-2017.05.18"},
-		SearchSource: "",
+		Name:     name,
+		Elastics: []*Elastic{NewElastic(name)},
 	}
 }
 

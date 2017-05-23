@@ -19,7 +19,7 @@ var l = lg.NewLogger("EL")
 func main() {
 	app := cli.NewApp()
 	app.Name = "el"
-	app.Usage = "elasticsearch importer / exporter"
+	app.Usage = "elasticsearch exporter"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "config, c",
@@ -28,22 +28,15 @@ func main() {
 		}, cli.StringFlag{
 			Name: "environments, e",
 			Usage: "Environments (file suffixes) for configurations and properties files." +
-				"This files - <file>_<suffix>.<ext> -will be loaded from same direcory as a configuration, properties file.",
-			Value: "PROD",
-
+				"This files - <file>_<suffix>.<ext> -will be loaded from same directory as a configuration, properties file.",
+			Value: "",
 		},
 	}
 	app.Commands = []cli.Command{
 		{
-			Name:    "export",
+			Name:    "start",
 			Aliases: []string{"sc"},
-			Usage:   "Start El server - access data provided from file",
-			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "security, s",
-					Usage: "Load security configuration from `FILE`",
-				},
-			},
+			Usage:   "Start El server",
 			Action: func(c *cli.Context) error {
 				config, err := loadConfig(c)
 				if err != nil {
@@ -107,6 +100,10 @@ func defineRoutes(engine *gin.Engine, controller *core.El, config *core.Config) 
 		adminGroup.GET("/config", func(c *gin.Context) {
 			c.Header("Content-Type", "application/json; charset=UTF-8")
 			c.IndentedJSON(http.StatusOK, config)
+		})
+
+		adminGroup.GET("/shutdown", func(c *gin.Context) {
+			panic(nil)
 		})
 	}
 }
